@@ -4,6 +4,12 @@ plugins {
     id 'com.android.application'
 }
 
+// `love.source_dir` (relative to the root project) builds a LOVE checkout other
+// than the love submodule.
+def loveSourceDir = project.properties["love.source_dir"] != null
+    ? rootProject.file(project.properties["love.source_dir"])
+    : file('src/main/cpp/love')
+
 android {
     namespace "org.love2d.android"
     ndkVersion '27.3.13750724'
@@ -18,7 +24,7 @@ android {
 
         externalNativeBuild {
             cmake {
-                arguments "-DANDROID_STL=c++_shared", "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=1", "-DCMAKE_POLICY_VERSION_MINIMUM=3.5", "-DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON", "-DCMAKE_BUILD_TYPE=RelWithDebInfo"
+                arguments "-DANDROID_STL=c++_shared", "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=1", "-DCMAKE_POLICY_VERSION_MINIMUM=3.5", "-DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON", "-DCMAKE_BUILD_TYPE=RelWithDebInfo", "-DLOVE_SOURCE_DIR=" + loveSourceDir.absolutePath
                 // https://issuetracker.google.com/issues/274493986
                 // Transitive shared library that's added through `add_dependencies` is not taken into
                 // account. This result in liboboe.so and libluajit.so not get included into the final
@@ -126,7 +132,7 @@ android {
             java {
                 srcDir 'src/main/cpp/megasource/libs/SDL3/android-project/app/src/main/java'
                 srcDir 'src/main/java'
-                srcDir 'src/main/cpp/love/src/libraries/luahttps/src/android/java'
+                srcDir new File(loveSourceDir, 'src/libraries/luahttps/src/android/java')
                 srcDirs += retrieveAll3pModules()
             }
         }

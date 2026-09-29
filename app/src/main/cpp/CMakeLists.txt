@@ -25,8 +25,10 @@ project(love-android LANGUAGES C CXX)
 add_custom_target(love_android)
 set(LOVE_ANDROID 1)
 
-# Include Megasource and LOVE
-set(MEGA_LOVE "${CMAKE_CURRENT_SOURCE_DIR}/love")
+# Include Megasource and LOVE. LOVE_SOURCE_DIR can point at a LOVE checkout
+# other than the love submodule.
+set(LOVE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/love" CACHE PATH "LOVE source directory")
+set(MEGA_LOVE "${LOVE_SOURCE_DIR}")
 add_subdirectory(megasource)
 
 add_dependencies(love_android love OpenAL)
