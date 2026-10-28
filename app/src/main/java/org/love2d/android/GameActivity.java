@@ -91,6 +91,14 @@ public class GameActivity extends SDLActivity {
     }
 
     @Override
+    public void setOrientationBis(int w, int h, boolean resizable, String hint) {
+        // The manifest's screenOrientation is the game's orientation. SDL would otherwise replace
+        // it when the window is created: without SDL_HINT_ORIENTATIONS, a fixed-size window gets
+        // whichever sensor orientation fits its requested size (LOVE's default 800x600 is
+        // landscape), ignoring the manifest and the user's rotation lock.
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "started");
         isFused = hasEmbeddedGame();
